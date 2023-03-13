@@ -5,9 +5,10 @@ module.exports = (http) => {
     const io = socketio(http);
 
     io.on('connection', (socket) => {
+        socket.send('connected');
         console.log('client connected');
-        socket.on('disconnect', function () {
-        console.log('client disconnected');
-        });
-    })
+        socket.on('disconnect', () => socketEvents.handleDisconnect());
+        socket.on('reminder', (msg) => socketEvents.reminderBroadcast(socket, msg))
+        socket.on('task', (msg) => socketEvents.taskBroadcast(socket, msg));
+    });
 }
