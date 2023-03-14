@@ -2,14 +2,14 @@ function handleDisconnect() {
     console.log('client disconnected');
 }
 
-function reminderBroadcast(socket, msg) {
+function sensorBroadcast(socket, msg) {
     //Broadcast to all clients except the sender
-    socket.broadcast.emit('reminder', msg);
+    socket.emit('sensor', msg);
 }
 
 function taskBroadcast(socket, msg) {
     //Broadcast to all clients except the sender
-    socket.broadcast.emit('task', msg);
+    socket.emit('task', msg);
 }
 
-export { handleDisconnect, reminderBroadcast, taskBroadcast };
+export { handleDisconnect, sensorBroadcast, taskBroadcast };
