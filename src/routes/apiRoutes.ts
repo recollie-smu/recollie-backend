@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const apiController = require('../controllers/api.ts');
+const reminderController = require('../controllers/reminder.ts');
 
-/* GET sth. */
-router.get('/', apiController.get);
-
-module.exports = router;
+/* GET Reminders */
+module.exports = (supabase) => {
+    router.get('/reminders', function(req, res, next) {
+        reminderController.get(req, res, next, supabase);
+      });
+    return router;
+};
