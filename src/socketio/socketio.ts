@@ -11,7 +11,7 @@ module.exports = (http, supabaseChannel) => {
   webUINamespace.on('connection', (socket) => {
     console.log('Web UI client connected');
     socket.send('You are connected to the Web UI namespace');
-    socket.on('disconnect', () => socketEvents.handleDisconnect());
+    socket.on('disconnect', () => socketEvents.handleDisconnect('Web UI'));
     socket.on('task', (msg) => socketEvents.taskBroadcast(serialLooperNamespace, msg));
   });
   
@@ -19,7 +19,7 @@ module.exports = (http, supabaseChannel) => {
   serialLooperNamespace.on('connection', (socket) => {
     console.log('Serial looper client connected');
     socket.send('You are connected to the Serial Looper namespace');
-    socket.on('disconnect', () => socketEvents.handleDisconnect());
+    socket.on('disconnect', () => socketEvents.handleDisconnect("Serial looper"));
     socket.on('task', (msg) => socketEvents.taskBroadcast(webUINamespace, msg));
     socket.on('sensor', (msg) => socketEvents.sensorBroadcast(webUINamespace, msg));
   });
@@ -32,7 +32,7 @@ module.exports = (http, supabaseChannel) => {
             schema: 'public',
             table: 'reminders',
         },
-        (payload: any) => webUINamespace.emit('reminder', payload)
+        (payload) => socketEvents.reminderUpdateBroadcast(webUINamespace, payload)
     ).subscribe();
 
   
