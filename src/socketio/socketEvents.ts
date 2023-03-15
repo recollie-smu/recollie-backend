@@ -18,9 +18,7 @@ async function reminderUpdateBroadcast(socket, payload : JSON) {
         if (err) {
             // some clients did not acknowledge the event in the given delay
             console.log("reminder update have timed out");
-        } else {
-            console.log(responses); // one response per client
-        }
+        } 
       });
 }
 
