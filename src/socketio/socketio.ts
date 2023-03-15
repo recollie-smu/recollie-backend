@@ -1,6 +1,21 @@
 const socketio = require('socket.io');
 const socketEvents = require('./socketEvents.ts');
 
+/**
+ * Creates a socket.io instance.
+ * 
+ * @remarks
+ * Creates 2 namespaces: 
+ * - Web UI namespace for the base station UI
+ * - Serial looper namespace for the serial looper
+ * Supabase channel is also subscribed to for updates on the reminders table.
+ * 
+ * @param http - The http server instance.
+ * @param supabaseChannel - The Supabase channel instance.
+ * @returns The socket.io instance.
+ */
+
+
 module.exports = (http, supabaseChannel) => {
   const io = socketio(http);
 
@@ -32,7 +47,7 @@ module.exports = (http, supabaseChannel) => {
             schema: 'public',
             table: 'reminders',
         },
-        (payload) => socketEvents.reminderUpdateBroadcast(webUINamespace, payload)
+        (payload: JSON) => socketEvents.reminderUpdateBroadcast(webUINamespace, payload)
     ).subscribe();
 
   

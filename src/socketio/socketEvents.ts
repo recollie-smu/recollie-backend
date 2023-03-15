@@ -1,20 +1,46 @@
 import { ReminderUpdate, Reminder } from "../models/reminder";
 import {v4 as uuidv4} from 'uuid';
 
+/**
+ * Handles WS disconnection.
+ * 
+ * @param namespace - The socket.io namespace to broadcast to.
+ */
 function handleDisconnect(namespace) {
     console.log(`${namespace} client disconnected`);
 }
 
+/**
+ * Broadcasts a sensor input to WebUI from Serial looper.
+ * 
+ * @param socket - The socket.io namespace to broadcast to. 
+ * @param msg - The sensor input.
+ */
 function sensorBroadcast(socket, msg) {
     //Broadcast to all clients except the sender
     socket.emit('sensor', msg);
 }
 
+/**
+ * Broadcasts a task status between WebUI and Serial looper.
+ * 
+ * @param socket - The socket.io namespace to broadcast to. 
+ * @param msg - The task status.
+ */
 function taskBroadcast(socket, msg) {
     //Broadcast to all clients except the sender
     socket.emit('task', msg);
 }
 
+/**
+ * Broadcasts a Supabase reminder update to WebUI.
+ * 
+ * @remarks
+ * Requires client to acknowledge the event within 10 seconds.
+ * 
+ * @param socket - The socket.io namespace to broadcast to. (WebUINamespace Only)
+ * @param payload - The Supabase database change payload.
+ */
 async function reminderUpdateBroadcast(socket, payload) {
     try {
         // map data to Reminder
@@ -24,13 +50,13 @@ async function reminderUpdateBroadcast(socket, payload) {
             data.date_updated = new Date(data.date_updated);
         }
 
-        let event_payload = extract_event_payload(payload.eventType, data, payload.old);
+        let eventPayload = extractEventPayload(payload.eventType, data, payload.old);
         console.debug("Reminder update received: ");
-        console.debug(event_payload)
+        console.debug(eventPayload)
         
         //Broadcast to all clients except the sender
-        if (event_payload) {
-            socket.timeout(10000).emit("reminder", event_payload, (err, responses) => {
+        if (eventPayload) {
+            socket.timeout(10000).emit("reminder", eventPayload, (err, responses) => {
                 if (err) {
                     // some clients did not acknowledge the event in the given delay
                     console.warn("reminder update have timed out");
@@ -46,17 +72,28 @@ async function reminderUpdateBroadcast(socket, payload) {
     }
 }
 
-function extract_event_payload (event, data: Reminder, old: any) : ReminderUpdate | null {
+/**
+ * Returns a ReminderUpdate.
+ * 
+ * @remarks
+ * Extracts the event payload from the Supabase payload for webui.
+ * 
+ * @param eventType - The type of the event. INSERT, UPDATE or DELETE.
+ * @param data - The new data. Same as Reminder.
+ * @param old - The old data.
+ * @returns The ReminderUpdate.
+ */
+function extractEventPayload (eventType, data: Reminder, old: any) : ReminderUpdate | null {
     
     // Return only if it is today or day of the week and not deleted
     const d = new Date();
     const weekday = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-    if (event !== 'DELETE' && (data.date !== d.toISOString().split('T')[0] && !data[weekday[d.getDay()]])) {
+    if (eventType !== 'DELETE' && (data.date !== d.toISOString().split('T')[0] && !data[weekday[d.getDay()]])) {
         console.debug("Reminder is not today or day of the week")
         return null;
     }
 
-    switch (event) {
+    switch (eventType) {
         case 'INSERT':
             return {
                 updateId: uuidv4(),
