@@ -5,6 +5,20 @@ const { createClient } = require('@supabase/supabase-js')
 const port = process.env.PORT || 8080;
 require('dotenv').config();
 
+/*
+ * Entry point for the socketIO Server.
+ * It sets up the supabase client, routes, and socket.io instance.
+ *   
+ * @remarks
+ * The supabase client is used to connect to the reminder table.
+ * The socket.io instance is used to handle socket communication between the base station UI and the serial looper.
+ *
+ * @packageDocumentation
+ * @module app
+ * @preferred
+ */ 
+
+
 // Set up supabase client
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 const supabaseChannel = supabase.channel('table-db-changes');
