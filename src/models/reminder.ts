@@ -19,4 +19,11 @@ export interface Reminder {
     saturday: boolean;
     sunday: boolean;
 }
+
+export interface ReminderUpdate {
+    updateId: string,
+    reminderId: number,
+    type: number,
+    reminder: Reminder | null
+}
   

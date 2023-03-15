@@ -32,7 +32,7 @@ module.exports = (http, supabaseChannel) => {
             schema: 'public',
             table: 'reminders',
         },
-        (payload: JSON) => socketEvents.reminderUpdateBroadcast(webUINamespace, payload)
+        (payload) => socketEvents.reminderUpdateBroadcast(webUINamespace, payload)
     ).subscribe();
 
   
