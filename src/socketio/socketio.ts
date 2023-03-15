@@ -15,7 +15,6 @@ const socketEvents = require('./socketEvents.ts');
  * @returns The socket.io instance.
  */
 
-
 module.exports = (http, supabaseChannel) => {
   const io = socketio(http);
 

@@ -1,7 +1,8 @@
-# Socketio backend for Recollie
+# Socketio backend for Recollie 🐩
 ### Setup
-1. Update env file with server credentials
-2. Install node packages
+1. Install nodejs
+2. Update env file with server credentials
+3. Install node packages
 ```
 npm install
 ```
