@@ -1,5 +1,5 @@
-function handleDisconnect() {
-    console.log('client disconnected');
+function handleDisconnect(namespace) {
+    console.log(`${namespace} client disconnected`);
 }
 
 function sensorBroadcast(socket, msg) {
@@ -12,4 +12,16 @@ function taskBroadcast(socket, msg) {
     socket.emit('task', msg);
 }
 
-export { handleDisconnect, sensorBroadcast, taskBroadcast };
+async function reminderUpdateBroadcast(socket, payload : JSON) {
+    //Broadcast to all clients except the sender
+    socket.timeout(10000).emit("reminder", payload, (err, responses) => {
+        if (err) {
+            // some clients did not acknowledge the event in the given delay
+            console.log("reminder update have timed out");
+        } else {
+            console.log(responses); // one response per client
+        }
+      });
+}
+
+export { handleDisconnect, sensorBroadcast, taskBroadcast, reminderUpdateBroadcast};
