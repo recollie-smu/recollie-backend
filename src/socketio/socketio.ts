@@ -16,7 +16,12 @@ const socketEvents = require('./socketEvents.ts');
  */
 
 module.exports = (http, supabaseChannel) => {
-  const io = socketio(http);
+  const io = socketio(http, {
+      cors: {
+        origin: "http://localhost",
+        methods: ["GET", "POST"]
+      }
+    });
 
   const webUINamespace = io.of('/web-ui');
   const serialLooperNamespace = io.of('/serial-looper');
