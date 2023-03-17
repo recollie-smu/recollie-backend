@@ -1,4 +1,5 @@
 const app = require('express')();
+const cors = require('cors');
 const server = require('http').createServer(app);
 const createSocket = require('./src/socketio/socketio');
 const { createClient } = require('@supabase/supabase-js')
@@ -22,6 +23,9 @@ require('dotenv').config();
 // Set up supabase client
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 const supabaseChannel = supabase.channel('table-db-changes');
+
+// Enable cors
+app.use(cors());
 
 // Set up routes
 app.get('/', function(req, res) {
