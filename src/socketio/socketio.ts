@@ -18,7 +18,7 @@ const socketEvents = require('./socketEvents.ts');
 module.exports = (http, supabaseChannel) => {
   const io = socketio(http, {
       cors: {
-        origin: "http://localhost",
+        origin: "*",
         methods: ["GET", "POST"]
       }
     });
