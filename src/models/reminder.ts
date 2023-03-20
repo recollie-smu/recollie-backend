@@ -55,3 +55,16 @@ export interface ReminderUpdate {
     /** The new reminder object, if applicable. */
     reminder: Reminder | null
 }
+
+/**
+ * Represents a Telegram bot credentials.
+ * 
+ */
+export interface TelegramCreds {
+    /** The Telegram bot API URL. */
+    teleUrl: string;
+    /** The Telegram bot token. */
+    token: string;
+    /** The Telegram chat ID. */
+    chatId: string;
+}

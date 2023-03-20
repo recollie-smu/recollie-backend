@@ -54,5 +54,5 @@ module.exports = (http, supabaseChannel) => {
         (payload: JSON) => socketEvents.reminderUpdateBroadcast(webUINamespace, payload)
     ).subscribe();
 
-  
+  return webUINamespace;
 };

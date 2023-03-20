@@ -120,4 +120,13 @@ function extractEventPayload (eventType, data: Reminder, old: any) : ReminderUpd
     }
 }
 
-export { handleDisconnect, sensorBroadcast, taskBroadcast, reminderUpdateBroadcast};
+function getStatusPayload(chatId: number) : ReminderUpdate {
+    return {
+        updateId: uuidv4(),
+        reminderId: chatId,
+        type: 4,
+        reminder: null
+    }
+}
+
+export { handleDisconnect, sensorBroadcast, taskBroadcast, reminderUpdateBroadcast, getStatusPayload};
