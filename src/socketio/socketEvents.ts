@@ -87,8 +87,10 @@ function extractEventPayload (eventType, data: Reminder, old: any) : ReminderUpd
     
     // Return only if it is today or day of the week and not deleted
     const d = new Date();
+    let ld = d;
+    ld.setHours(ld.getHours() + 8);
     const weekday = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-    if (eventType !== 'DELETE' && (data.date !== d.toISOString().split('T')[0] && !data[weekday[d.getDay()]])) {
+    if (eventType !== 'DELETE' && (data.date !== ld.toISOString().split('T')[0] && !data[weekday[d.getDay()]])) {
         console.debug("Reminder is not today or day of the week")
         return null;
     }
