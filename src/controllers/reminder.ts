@@ -12,14 +12,16 @@ import {Reminder} from '../models/reminder';
 async function get(req, res, next, supabase) {
   try {
     const d = new Date();
+    let ld = d;
+    ld.setHours(ld.getHours() + 8);
     // Day of week is 0-6, Sunday is 0
     const weekday = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]; 
-    console.log("Querying for " + d.toISOString().split('T')[0] + " " + weekday[d.getDay()])
+    console.log("Querying for " + ld.toISOString().split('T')[0] + " " + weekday[d.getDay()])
 
     const { data, sbErr } = await supabase
       .from('reminders')
       .select('*')
-      .or(`date.eq.${d.toISOString().split('T')[0]},${weekday[d.getDay()]}.eq.true`) // Filter by date non-repeating reminders or day of week for repeating reminders
+      .or(`date.eq.${ld.toISOString().split('T')[0]},${weekday[d.getDay()]}.eq.true`) // Filter by date non-repeating reminders or day of week for repeating reminders
       .order('time', { ascending: true })
 
     if (sbErr) {
